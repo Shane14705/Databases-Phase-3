@@ -1,0 +1,4 @@
+﻿/*Initialization*/
+CREATE SCHEMA PHASE3;
+USE PHASE3;
+
