@@ -19,6 +19,8 @@ public partial class Item
 
     public int ShelfLocation { get; set; }
 
+    public string ItemName { get; set; } = null!;
+
     public virtual ICollection<ItemsOrdered> ItemsOrdereds { get; } = new List<ItemsOrdered>();
 
     public virtual ICollection<PickList> PickLists { get; } = new List<PickList>();

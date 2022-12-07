@@ -6,10 +6,11 @@ namespace Phase3Databases.DatabaseModels;
 
 public partial class Phase3Context : DbContext
 {
-    public Phase3Context()
+    private string conn_string;
+    public Phase3Context(string connection)
     {
+        conn_string = connection;
     }
-
     public Phase3Context(DbContextOptions<Phase3Context> options)
         : base(options)
     {
@@ -37,7 +38,7 @@ public partial class Phase3Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=129.146.191.238;uid=phase3;pwd=Test!Password123;database=PHASE3", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
+        => optionsBuilder.UseMySql(conn_string, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -124,9 +125,10 @@ public partial class Phase3Context : DbContext
                 .HasColumnName("Item_ID");
             entity.Property(e => e.AgeRequirement).HasColumnName("Age_Requirement");
             entity.Property(e => e.DepartmentNumber).HasColumnName("Department_Number");
-            entity.Property(e => e.Price)
-                .HasPrecision(13, 4)
-                .HasColumnName("PRICE");
+            entity.Property(e => e.ItemName)
+                .HasMaxLength(32)
+                .HasColumnName("Item_Name");
+            entity.Property(e => e.Price).HasPrecision(13, 4);
             entity.Property(e => e.QuantityAvailable).HasColumnName("Quantity_Available");
             entity.Property(e => e.ShelfLocation).HasColumnName("Shelf_Location");
         });
