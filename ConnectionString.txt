@@ -1,0 +1,1 @@
+﻿"server=129.146.191.238;uid=phase3;pwd=Test!Password123;database=PHASE3"

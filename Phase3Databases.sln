@@ -5,6 +5,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{B6CF2FB9-C5AE-40BF-9729-72FE794567F8}"
 	ProjectSection(SolutionItems) = preProject
 		Schema.sql = Schema.sql
+		ConnectionString.txt = ConnectionString.txt
 	EndProjectSection
 EndProject
 Global

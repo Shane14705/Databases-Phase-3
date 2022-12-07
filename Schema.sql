@@ -12,7 +12,7 @@ USE PHASE3;
 /* We are going to create the tables that don't rely on any other tables first!*/
 CREATE TABLE CUSTOMER (
     Customer_ID INT NOT NULL ,
-    Delivery_Location POINT ,
+    Delivery_Location VARCHAR(32) ,
     First_Name VARCHAR(32) NOT NULL ,
     Last_Name VARCHAR(32) NOT NULL ,
     Birth_Date DATE NOT NULL ,
@@ -37,7 +37,7 @@ CREATE TABLE COURIER (
     First_Name VARCHAR(32) NOT NULL ,
     Last_Name VARCHAR(32) NOT NULL ,
     Phone_Number CHAR(10) NOT NULL ,
-    Current_Location POINT ,
+    Current_Location VARCHAR(32) ,
     Available BOOL NOT NULL ,
     PRIMARY KEY (Courier_ID)
 );
