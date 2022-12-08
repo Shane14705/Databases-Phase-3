@@ -1,12 +1,22 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Microsoft.EntityFrameworkCore;
+using Phase3Databases;
 using Phase3Databases.DatabaseModels;
+
 
 Console.WriteLine("Hello, World!");
 
 string connstring = File.OpenText("ConnectionString.txt")?.ReadLine();
-Phase3Context Phase3DB = new Phase3Context(connstring);
+
+
+while (true)
+{
+    Console.WriteLine("Please login! Are you a customer, an employee, or a courier?\n");
+    Client myclient = new Client((UserType) (OptionsMenu("Customer", "Employee", "Courier")), connstring);
+}
+
+
 
 
 //Pass in an array of "options" and this function will print them niceley and return user input.
@@ -27,5 +37,6 @@ int OptionsMenu(params string[] options)
 
     return i;
 }
+
 
 Console.WriteLine(OptionsMenu("Hello", "World", "This", "Is", "A", "Test!"));
