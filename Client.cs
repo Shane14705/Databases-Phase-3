@@ -6,8 +6,9 @@ public abstract class Client
     //private Phase3Context Phase3DB;
     protected int uid = -1;
 
-    public Client()
+    public Client(string connstring)
     {
+        this.connstring = connstring;
         //Get User ID
         do
         {

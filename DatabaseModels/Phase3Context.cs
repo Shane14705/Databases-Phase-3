@@ -9,7 +9,7 @@ public partial class Phase3Context : DbContext
     private string conn_string;
     public Phase3Context(string connection)
     {
-        conn_string = connection;
+        this.conn_string = connection;
     }
     public Phase3Context(DbContextOptions<Phase3Context> options)
         : base(options)
@@ -38,7 +38,7 @@ public partial class Phase3Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql(conn_string, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
+        => optionsBuilder.UseMySql(this.conn_string, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.30-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -4,20 +4,26 @@ namespace Phase3Databases;
 
 public class CourierClient : Client
 {
-    private Courier user = null;
+    private Courier user;
     
-    public CourierClient(string connstring) : base()
+    public CourierClient(string connstring) : base(connstring)
     {
         
         //Queries here? https://learn.microsoft.com/en-us/ef/core/querying/
-        using (Phase3Context db = new Phase3Context(this.connstring))
+        try
         {
-            //Find user here
-            
+            using (Phase3Context db = new Phase3Context(this.connstring))
+            {
+                user = db.Couriers.Single(u => (u.CourierId == uid));
+            }
         }
-        
-        if (user == null) throw new UserNotFoundException("Couldn't find user with id " + this.uid);
-        
+        catch (InvalidOperationException e)
+        {
+            //We either got more than one user for id (not possible) or got 0 results (id doesn't exist)
+            throw new UserNotFoundException("Couldn't find user with id " + this.uid);
+        }
+
+        Console.WriteLine(user.FirstName);
     }
     public override void MainLoop()
     {
