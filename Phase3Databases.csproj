@@ -16,4 +16,10 @@
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0-alpha.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="ConnectionString.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

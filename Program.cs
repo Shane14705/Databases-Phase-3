@@ -8,13 +8,24 @@ Console.WriteLine("Hello, World!");
 string connstring = File.OpenText("ConnectionString.txt")?.ReadLine();
 Phase3Context Phase3DB = new Phase3Context(connstring);
 
+
+//Pass in an array of "options" and this function will print them niceley and return user input.
 int OptionsMenu(params string[] options)
 {
     int i;
-    for (i=0; i < options.Length; i++)
+    do
     {
-        Console.WriteLine(i + ". " + options[0]);
-    }
+        Console.WriteLine("Please enter one of the following numbers to select an option: ");
+        for (i = 0; i < options.Length; i++)
+        {
+            Console.WriteLine((i+1) + ". " + options[i]);
+        }
+
+        int.TryParse(Console.ReadLine(), out i);
+        Console.WriteLine("\n");
+    } while (i < 1 || i > options.Length);
 
     return i;
 }
+
+Console.WriteLine(OptionsMenu("Hello", "World", "This", "Is", "A", "Test!"));
