@@ -28,6 +28,45 @@ public class CustomerClient : Client
 
     public override void MainLoop()
     {
-        throw new NotImplementedException();
+        int option = -1;
+        while (option != 4)
+        {
+            Console.WriteLine("What would you like to do?\n");
+            option = Client.OptionsMenu("Search for an item", "Place an order", "Check order status", "Log-out");
+            switch (option)
+            {
+                case 1:
+                    //Search for an item
+                    Console.WriteLine("What would you like to search for?");
+                    List<Item> results = this.itemSearch(Console.ReadLine());
+                    if (results.Count == 0)
+                    {
+                        Console.WriteLine("No results :(");
+                        break;
+                    }
+                    else
+                    {
+                        foreach (Item i in results)
+                        {
+                            Console.WriteLine(i);
+                        }
+                    }
+                    break;
+                case 2:
+                    //Place_Order()
+                    break;
+                case 3:
+                    //Check order status
+                    break;
+            }
+        }
+    }
+
+    private List<Item> itemSearch(string query)
+    {
+        using (Phase3Context db = new Phase3Context(this.connstring))
+        {
+            return db.Items.Where(i => i.ItemName.Contains(query)).ToList();
+        }
     }
 }

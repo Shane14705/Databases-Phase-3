@@ -24,4 +24,9 @@ public partial class Item
     public virtual ICollection<ItemsOrdered> ItemsOrdereds { get; } = new List<ItemsOrdered>();
 
     public virtual ICollection<PickList> PickLists { get; } = new List<PickList>();
+
+    public override string ToString()
+    {
+        return this.ItemName + "\t|\t$" + this.Price + "\t|\tId: " + this.ItemId;
+    }
 }
