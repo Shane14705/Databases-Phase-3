@@ -9,11 +9,36 @@ Console.WriteLine("Hello, World!");
 
 string connstring = File.OpenText("ConnectionString.txt")?.ReadLine();
 
+Client client = null;
 
 while (true)
 {
     Console.WriteLine("Please login! Are you a customer, an employee, or a courier?\n");
-    Client myclient = new Client((UserType) (OptionsMenu("Customer", "Employee", "Courier")), connstring);
+    try
+    {
+        switch ((UserType) (OptionsMenu("Customer", "Employee", "Courier")))
+        {
+            case UserType.Customers:
+                client = new CustomerClient(connstring);
+                break;
+
+            case UserType.Employees:
+                client = new EmployeeClient(connstring);
+                break;
+            
+            case UserType.Couriers:
+                client = new CourierClient(connstring);
+                break;
+            default:
+                throw new ArgumentException("Invalid usertype given!");
+        }
+        client.MainLoop();
+    }
+    catch (UserNotFoundException e)
+    {
+        Console.WriteLine(e.Message + "\n");
+    }
+
 }
 
 

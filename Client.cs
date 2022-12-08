@@ -1,29 +1,28 @@
-﻿using Phase3Databases.DatabaseModels;
+﻿namespace Phase3Databases;
 
-namespace Phase3Databases;
-
-public class Client
+public abstract class Client
 {
-    private UserType clientType;
-    private string connstring;
-    private Phase3Context Phase3DB;
-    private int uid = -1;
-    
-    public Client(UserType logintype, string connstring)
+    protected string connstring;
+    //private Phase3Context Phase3DB;
+    protected int uid = -1;
+
+    public Client()
     {
-        //May eventually want to switch the check for valid enum to be here instead
-        clientType = logintype;
-        Phase3DB = new Phase3Context(connstring);
-        
-        
         //Get User ID
         do
         {
             Console.WriteLine("Please enter your user ID: \n"); 
         }
-        while (!int.TryParse(Console.ReadLine(), out uid)) ;
-        
-        //Queries here? https://learn.microsoft.com/en-us/ef/core/querying/
+        while (!int.TryParse(Console.ReadLine(), out this.uid)) ;
+    }
+    public abstract void MainLoop();
+
+}
+
+public class UserNotFoundException : Exception
+{
+    public UserNotFoundException(string message) : base(message)
+    {
         
     }
 }
