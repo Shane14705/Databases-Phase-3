@@ -6,6 +6,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{B6
 	ProjectSection(SolutionItems) = preProject
 		Schema.sql = Schema.sql
 		ConnectionString.txt = ConnectionString.txt
+		ITEM.sql = ITEM.sql
+		CUSTOMER.sql = CUSTOMER.sql
+		COURIER.sql = COURIER.sql
+		EMPLOYEE.sql = EMPLOYEE.sql
 	EndProjectSection
 EndProject
 Global
