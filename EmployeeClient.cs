@@ -6,6 +6,24 @@ public class EmployeeClient : Client
 {
     private Employee user;
 
+    public bool IsPicking
+    {
+        get
+        {
+            using (Phase3Context db = new Phase3Context(this.connstring))
+            {
+                if (db.PickLists.Where(pl => pl.EmployeeId == uid).Count() > 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
     public EmployeeClient(string connstring) : base(connstring)
     {
 
@@ -29,7 +47,33 @@ public class EmployeeClient : Client
     //Returns bool representing whether a pickwalk was successfully done or not.
     private bool StartPick_Walk()
     {
-        throw new NotImplementedException();
+        using (Phase3Context db = new Phase3Context(this.connstring))
+        {
+            if (IsPicking)
+            {
+                Console.WriteLine("You already have items to pick! Finish that order first!");
+                return false;
+            }
+            List<PickList> queue = db.PickLists.Where(pl => (pl.PickWalk == null)).ToList();
+            if (queue.Count <= 0)
+            {
+                Console.WriteLine("No items are in the picking queue right now!");
+                return false;
+            }
+            
+            queue = queue.GroupBy(pl => pl.Order).First().ToList();
+            db.Attach(user);
+            PickWalk newWalk = new PickWalk(DateTime.Now, this.user);
+            foreach (PickList k in queue)
+            {
+                newWalk.PickLists.Add(k);
+            }
+
+            db.PickWalks.Add(newWalk);
+            db.SaveChanges();
+        }
+
+        return true;
     }
 
     public override void MainLoop()

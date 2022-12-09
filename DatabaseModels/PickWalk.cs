@@ -5,6 +5,13 @@ namespace Phase3Databases.DatabaseModels;
 
 public partial class PickWalk
 {
+    public PickWalk(DateTime startTimestamp, Employee employee)
+    {
+        StartTimestamp = startTimestamp;
+        Employee = employee;
+        this.TotalQuantityPicked = 0;
+    }
+
     public DateTime StartTimestamp { get; set; }
 
     public int EmployeeId { get; set; }
