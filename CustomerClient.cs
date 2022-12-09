@@ -116,6 +116,7 @@ public class CustomerClient : Client
                 {
                     try
                     {
+                        //TODO: FIX ISSUES IF SAME ITEM IS FOUND IN LIST TWICE (perhaps we can keep track of what the line below has returned so far?
                         Item item = db.Items.Where(j => j.ItemId == shopList[i].Item1).Single();
 
                         if (item.AgeRequirement != null && user.Age < item.AgeRequirement)
@@ -212,6 +213,7 @@ public class CustomerClient : Client
                 foreach (ValueTuple<int, int> k in shopList)
                 {
                     db.ItemsOrdereds.Add(new ItemsOrdered(newOrder.OrderId, k.Item1, k.Item2));
+                    db.PickLists.Add(new PickList(k.Item1, k.Item2, newOrder.OrderId));
                 }
 
                 db.SaveChanges();

@@ -5,6 +5,12 @@ namespace Phase3Databases.DatabaseModels;
 
 public partial class PickList
 {
+    public PickList(int itemId, int quantityNeeded, int orderId)
+    {
+        this.ItemId = itemId;
+        this.QuantityNeeded = quantityNeeded;
+        this.OrderId = orderId;
+    }
     public DateTime? StartTimestamp { get; set; }
 
     public int? EmployeeId { get; set; }
