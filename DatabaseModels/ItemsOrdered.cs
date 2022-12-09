@@ -5,6 +5,12 @@ namespace Phase3Databases.DatabaseModels;
 
 public partial class ItemsOrdered
 {
+    public ItemsOrdered(int orderId, int itemId, int quantityRequested = 1)
+    {
+        OrderId = orderId;
+        ItemId = itemId;
+        QuantityRequested = quantityRequested;
+    }
     public int OrderId { get; set; }
 
     public int ItemId { get; set; }

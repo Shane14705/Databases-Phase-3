@@ -54,7 +54,7 @@ public class CustomerClient : Client
                     }
                     break;
                 case 2:
-                    //Place_Order()
+                    PlaceOrder();
                     break;
                 case 3:
                     //Check order status
@@ -69,10 +69,24 @@ public class CustomerClient : Client
         decimal orderTotal = 0;
         do
         {
+            ValueTuple<int, int> entry;
             Console.WriteLine(
                 "Please enter the id and quantity of the item you would like to add to your order, separated by a comma: (enter a negative item id when you are done)");
-            string[] s = Console.ReadLine().Split(',');
-            ValueTuple<int, int> entry = (int.Parse(s[0]), int.Parse(s[1]));
+            try
+            {
+                
+                string[] s = Console.ReadLine().Split(',');
+                if (s[0].Contains('-'))
+                {
+                    break;
+                } 
+                entry = (int.Parse(s[0]), int.Parse(s[1]));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Your input was formatted incorrectly. Please try again.");
+                continue;
+            }
 
             if (entry.Item1 < 0)
             {
@@ -173,7 +187,7 @@ public class CustomerClient : Client
                 Order newOrder = new Order();
                 newOrder.OrderId = rand.Next(100000000);
                 newOrder.OrderTotal = orderTotal;
-                newOrder.Customer = user;
+                newOrder.CustomerId = user.CustomerId;
                 newOrder.OrderTimestamp = DateTime.Now;
                 
                 //Status of 1 = Placed and needing to be fulfilled
@@ -192,13 +206,19 @@ public class CustomerClient : Client
                             break;
                     }
                 }
-                //Need to go through the now verified list of items and add them all to the ITEMS ORDERED table
 
+                db.Orders.Add(newOrder);
+                //TODO: Need to go through the now verified list of items and add them all to the ITEMS ORDERED table
+                foreach (ValueTuple<int, int> k in shopList)
+                {
+                    db.ItemsOrdereds.Add(new ItemsOrdered(newOrder.OrderId, k.Item1, k.Item2));
+                }
 
+                db.SaveChanges();
             }
         }
         //Here to keep the compiler quiet during testing
-        return false;
+        return true;
     }
     
     private List<Item> itemSearch(string query)
