@@ -57,7 +57,7 @@ public class CustomerClient : Client
                     PlaceOrder();
                     break;
                 case 3:
-                    //Check order status
+                    //TODO: Check order status
                     break;
             }
         }
@@ -208,7 +208,7 @@ public class CustomerClient : Client
                 }
 
                 db.Orders.Add(newOrder);
-                //TODO: Need to go through the now verified list of items and add them all to the ITEMS ORDERED table
+                
                 foreach (ValueTuple<int, int> k in shopList)
                 {
                     db.ItemsOrdereds.Add(new ItemsOrdered(newOrder.OrderId, k.Item1, k.Item2));
