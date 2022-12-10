@@ -34,7 +34,7 @@ public class CustomerClient : Client
         while (option != 4)
         {
             Console.WriteLine("What would you like to do?\n");
-            option = Client.OptionsMenu("Search for an item", "Place an order", "Check order status", "Log-out");
+            option = Client.OptionsMenu("Search for an item", "Place an order", "Pick up available orders", "Log-out");
             switch (option)
             {
                 case 1:
@@ -58,17 +58,40 @@ public class CustomerClient : Client
                     PlaceOrder();
                     break;
                 case 3:
-                    //TODO: CHECK ORDER FUNCTION
-                    CheckOrders();
+                    PickupOrders();
                     break;
             }
         }
     }
 
     //if user has any outstanding orders, their status is updated and it will return true
-    private bool CheckOrders()
+    private bool PickupOrders()
     {
-        throw new NotImplementedException();
+        using (Phase3Context db = new Phase3Context(this.connstring))
+        {
+            List<Order> pickupOrders = db.Orders
+                .Where(order => ((order.CustomerId == uid) && (order.OrderStatus == 2))).ToList();
+
+            if (!pickupOrders.Any())
+            {
+                Console.WriteLine("Looks like you do not have any orders available for pickup right now!");
+                return false;
+            }
+            db.UpdateRange(pickupOrders);
+
+            foreach (Order order in pickupOrders)
+            {
+                order.OrderStatus = 4;
+                order.PickupTime = DateTime.Now;
+                
+                Console.WriteLine("You picked up order #" + order.OrderId + " with " + order.ItemsOrdereds.Count + " items!");
+            }
+
+            db.SaveChanges();
+            return true;
+        }
+
+        return false;
     }
     //Returns boolean showing whether order was successfully placed or not
     private bool PlaceOrder()
@@ -233,6 +256,9 @@ public class CustomerClient : Client
                 foreach (ValueTuple<int, int> k in shopList)
                 {
                     db.ItemsOrdereds.Add(new ItemsOrdered(newOrder.OrderId, k.Item1, k.Item2));
+                    Item item = db.Items.Where(j => j.ItemId == k.Item1).Single();
+                    db.Update(item);
+                    item.QuantityAvailable -= k.Item2;
                     db.PickLists.Add(new PickList(k.Item1, k.Item2, newOrder.OrderId));
                 }
 

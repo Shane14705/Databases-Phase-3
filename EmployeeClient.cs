@@ -74,16 +74,7 @@ public class EmployeeClient : Client
         }
         else
         {
-            // try
-            // {
-            //     walk = getCurrentWalk();
-            // }
-            // catch (System.InvalidOperationException e)
-            // {
-            //     Console.WriteLine(e);
-            //     return false;
-            // }
-            
+
             using (Phase3Context db = new Phase3Context(this.connstring))
             {
                 List<PickList> list = db.PickLists.Where(pl => pl.EmployeeId == uid).ToList();

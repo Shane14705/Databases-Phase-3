@@ -27,6 +27,6 @@ public partial class Item
 
     public override string ToString()
     {
-        return this.ItemName + "\t|\t$" + this.Price + "\t|\tId: " + this.ItemId;
+        return this.ItemName + "\t|\t$" + this.Price + "\t|\tId: " + this.ItemId + "\t|\tQuantity on-hand: " + this.QuantityAvailable;
     }
 }
