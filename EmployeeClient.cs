@@ -119,7 +119,7 @@ public class EmployeeClient : Client
             
             queue = queue.GroupBy(pl => pl.Order).First().ToList();
             db.Attach(user);
-            PickWalk newWalk = new PickWalk(DateTime.Now, this.user);
+            PickWalk newWalk = new PickWalk(DateTime.Now, this.uid);
             foreach (PickList k in queue)
             {
                 newWalk.PickLists.Add(k);

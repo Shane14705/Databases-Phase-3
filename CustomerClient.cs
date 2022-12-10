@@ -19,10 +19,11 @@ public class CustomerClient : Client
                 user = db.Customers.Single(e => (e.CustomerId == uid));
             }
         }
-        catch (InvalidOperationException e)
+        catch (Exception e)
         {
+            throw;
             //We either got more than one user for id (not possible) or got 0 results (id doesn't exist)
-            throw new UserNotFoundException("Couldn't find user with id " + this.uid);
+            //throw new UserNotFoundException("Couldn't find user with id " + this.uid);
         }
         Console.WriteLine(user.FirstName);
     }
