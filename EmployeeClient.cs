@@ -13,13 +13,13 @@ public class EmployeeClient : Client
         {
             using (Phase3Context db = new Phase3Context(this.connstring))
             {
-                if (db.PickLists.Where(pl => pl.EmployeeId == uid).Count() > 0)
+                if (db.PickLists.Any(pl => pl.EmployeeId == uid))
                 {
-                    return false;
+                    return true;
                 }
                 else
                 {
-                    return true;
+                    return false;
                 }
             }
         }
@@ -66,6 +66,7 @@ public class EmployeeClient : Client
     //Returns bool representing whether a pickwalk was successfully ended or not.
     private bool EndPick_Walk()
     {
+        PickWalk walk;
         if (!IsPicking)
         {
             Console.WriteLine("You dont have any items to be picked right now!");
@@ -73,18 +74,38 @@ public class EmployeeClient : Client
         }
         else
         {
-            PickWalk walk = getCurrentWalk();
+            // try
+            // {
+            //     walk = getCurrentWalk();
+            // }
+            // catch (System.InvalidOperationException e)
+            // {
+            //     Console.WriteLine(e);
+            //     return false;
+            // }
+            
             using (Phase3Context db = new Phase3Context(this.connstring))
             {
-                db.Attach(walk);
-                db.Attach(user);
+                List<PickList> list = db.PickLists.Where(pl => pl.EmployeeId == uid).ToList();
+                if (list.Count() > 0)
+                {
+                    walk = db.PickWalks.Where(pw =>
+                        ((pw.EmployeeId == list[0].EmployeeId) && (pw.StartTimestamp == list[0].StartTimestamp))).Single();
+                }
+                else
+                {
+                    throw new InvalidOperationException("Didn't find any items associated with this employee in the picking queue.");
+                }
+                db.Update(user);
+                db.Update(walk);
+                // db.Attach(user);
                 walk.EndTimestamp = DateTime.Now;
-                walk.WalkDuration = (int) (walk.StartTimestamp - walk.EndTimestamp).Value.TotalHours;
-                walk.PickRate =  (float) (walk.PickLists.Count / (walk.StartTimestamp - walk.EndTimestamp).Value.TotalHours);
-                walk.TotalQuantityPicked = walk.PickLists.Count();
+                walk.WalkDuration = (float) (walk.EndTimestamp - walk.StartTimestamp).Value.TotalHours;
+                walk.PickRate = (walk.PickLists.Count / walk.WalkDuration);
+                walk.TotalQuantityPicked = walk.PickLists.Count;
                 db.SaveChanges();
                 //Get number of walks in the system and divide their pickrates
-                int numwalks = db.PickWalks.Where(pw => (pw.Employee == user)).Count();
+                int numwalks = db.PickWalks.Count(pw => (pw.EmployeeId == uid));
                 user.CumulativePickrate += (walk.PickRate / numwalks).Value;
                 
                 db.PickLists.RemoveRange(walk.PickLists);
@@ -135,7 +156,7 @@ public class EmployeeClient : Client
     public override void MainLoop()
     {
         int option = -1;
-        while (option != 2)
+        while (option != 3)
         {
             Console.WriteLine("What would you like to do?\n");
             option = Client.OptionsMenu("Start a Pickwalk", "End Pickwalk", "Log-out");

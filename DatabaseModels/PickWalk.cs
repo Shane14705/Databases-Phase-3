@@ -5,6 +5,7 @@ namespace Phase3Databases.DatabaseModels;
 
 public partial class PickWalk
 {
+    //For some reason we cannot pass in an actual employee :shrug:
     public PickWalk(DateTime startTimestamp, int employeeId)
     {
         StartTimestamp = startTimestamp;
@@ -20,7 +21,7 @@ public partial class PickWalk
 
     public DateTime? EndTimestamp { get; set; }
 
-    public int? WalkDuration { get; set; }
+    public float? WalkDuration { get; set; }
 
     public float? PickRate { get; set; }
 
