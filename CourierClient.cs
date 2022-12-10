@@ -65,8 +65,10 @@ public class CourierClient : Client
             {
                 //this is where we would pick the order closest to the courier, but for now we will just always pick the first order
                 availableOrders[0].CourierId = uid;
-
-
+                //3 for "in-transit"
+                availableOrders[0].OrderStatus = 3;
+                db.Update(user);
+                user.Available = false;
 
                 db.SaveChanges();
             }
@@ -77,7 +79,29 @@ public class CourierClient : Client
 
     private bool EndDelivery()
     {
-        
+        if (IsAvailable)
+        {
+            Console.WriteLine("It looks like you have not started a delivery yet!");
+            return false;
+        }
+
+        using (Phase3Context db = new Phase3Context(this.connstring))
+        {
+            db.Attach(user);
+            Order currentOrder = db.Orders
+                .Single(order => ((order.CourierId == uid) && (order.OrderStatus == 3)));
+            db.Update(currentOrder);
+            user.CurrentLocation = db.Customers.Single(customer => (currentOrder.CustomerId == customer.CustomerId)).DeliveryLocation;
+            currentOrder.DeliveryTime = DateTime.Now;
+            currentOrder.HoursElapsed = (float) (currentOrder.DeliveryTime - currentOrder.OrderTimestamp).Value.TotalHours;
+            currentOrder.PickupTime = currentOrder.DeliveryTime;
+            currentOrder.OrderStatus = 4;
+            user.Available = true;
+            
+            db.SaveChanges();
+        }
+
+        return false;
     }
     
     public override void MainLoop()

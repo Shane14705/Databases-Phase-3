@@ -19,7 +19,7 @@ public partial class Order
 
     public DateTime? DeliveryTime { get; set; }
 
-    public int? HoursElapsed { get; set; }
+    public float? HoursElapsed { get; set; }
 
     public float? DistanceRemaining { get; set; }
 

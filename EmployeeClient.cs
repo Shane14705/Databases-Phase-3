@@ -96,7 +96,7 @@ public class EmployeeClient : Client
                 {
                     throw new InvalidOperationException("Didn't find any items associated with this employee in the picking queue.");
                 }
-                db.Update(user);
+                //db.Update(user);
                 db.Update(walk);
                 // db.Attach(user);
                 walk.EndTimestamp = DateTime.Now;
@@ -109,7 +109,7 @@ public class EmployeeClient : Client
                 user.CumulativePickrate += (walk.PickRate / numwalks).Value;
                 
                 //Mark order as fulfilled
-                list[0].Order.OrderStatus = 2;
+                db.Orders.Single(order => (order.OrderId == list[0].OrderId)).OrderStatus = 2;
                 db.PickLists.RemoveRange(walk.PickLists);
                 db.SaveChanges();
             }

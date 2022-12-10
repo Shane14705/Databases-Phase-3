@@ -106,7 +106,19 @@ public class CustomerClient : Client
             }
             else
             {
-                shopList.Add(entry);
+                try
+                {
+                    ValueTuple<int, int> currenttup = shopList.Single(tup => (tup.Item1 == entry.Item1));
+                    shopList.Remove(currenttup);
+                    currenttup.Item2 += entry.Item2;
+                    shopList.Add(currenttup);
+                }
+
+                catch (InvalidOperationException e)
+                {
+                    //Item not already in list
+                    shopList.Add(entry);
+                }
             }
         } while (true);
 
@@ -124,8 +136,8 @@ public class CustomerClient : Client
                 {
                     try
                     {
-                        //TODO: FIX ISSUES IF SAME ITEM IS FOUND IN LIST TWICE (perhaps we can keep track of what the line below has returned so far?
                         Item item = db.Items.Where(j => j.ItemId == shopList[i].Item1).Single();
+                        
 
                         if (item.AgeRequirement != null && user.Age < item.AgeRequirement)
                         {
@@ -158,7 +170,7 @@ public class CustomerClient : Client
                         {
                             Console.WriteLine("You requested " + shopList[i].Item2 + " " + item.ItemName +
                                               "(s), but it looks like we only have " + item.QuantityAvailable +
-                                              "left! What would you like to do?");
+                                              " left! What would you like to do?");
                             switch (OptionsMenu("Just give me the " + item.QuantityAvailable + " in stock",
                                         "Remove item from order and continue", "Cancel entire order"))
                             {
