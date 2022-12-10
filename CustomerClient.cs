@@ -58,10 +58,17 @@ public class CustomerClient : Client
                     PlaceOrder();
                     break;
                 case 3:
-                    //TODO: Check order status
+                    //TODO: CHECK ORDER FUNCTION
+                    CheckOrders();
                     break;
             }
         }
+    }
+
+    //if user has any outstanding orders, their status is updated and it will return true
+    private bool CheckOrders()
+    {
+        throw new NotImplementedException();
     }
     //Returns boolean showing whether order was successfully placed or not
     private bool PlaceOrder()

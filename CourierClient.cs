@@ -5,6 +5,24 @@ namespace Phase3Databases;
 public class CourierClient : Client
 {
     private Courier user;
+
+    private bool IsAvailable
+    {
+        get
+        {
+            using (Phase3Context db = new Phase3Context(this.connstring))
+            {
+                if (db.Couriers.Where(cor => (cor.CourierId == uid)).Single().Available)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+    }
     
     public CourierClient(string connstring) : base(connstring)
     {
@@ -25,8 +43,59 @@ public class CourierClient : Client
 
         Console.WriteLine(user.FirstName);
     }
+
+    private bool StartDelivery()
+    {
+        if (!IsAvailable)
+        {
+            Console.WriteLine("Sorry, looks like you already have a delivery you need to finish first before you can start another one!");
+            return false;
+        }
+        
+        using (Phase3Context db = new Phase3Context(this.connstring))
+        {
+            List<Order> availableOrders =
+                db.Orders.Where(or => ((or.OrderStatus == 2) && (or.EstimatedDeliveryTime != null))).ToList();
+            if (!availableOrders.Any())
+            {
+                Console.WriteLine("It doesn't look like there are any orders that need to be delivered right now!");
+                return false;
+            }
+            else
+            {
+                //this is where we would pick the order closest to the courier, but for now we will just always pick the first order
+                availableOrders[0].CourierId = uid;
+
+
+
+                db.SaveChanges();
+            }
+        }
+
+        return false;
+    }
+
+    private bool EndDelivery()
+    {
+        
+    }
+    
     public override void MainLoop()
     {
-        throw new NotImplementedException();
+        int option = -1;
+        while (option != 3)
+        {
+            Console.WriteLine("What would you like to do?\n");
+            option = Client.OptionsMenu("Pickup a delivery", "Complete a delivery", "Log-out");
+            switch (option)
+            {
+                case 1:
+                    StartDelivery();
+                    break;
+                case 2:
+                    EndDelivery();
+                    break;
+            }
+        }
     }
 }

@@ -108,8 +108,9 @@ public class EmployeeClient : Client
                 int numwalks = db.PickWalks.Count(pw => (pw.EmployeeId == uid));
                 user.CumulativePickrate += (walk.PickRate / numwalks).Value;
                 
+                //Mark order as fulfilled
+                list[0].Order.OrderStatus = 2;
                 db.PickLists.RemoveRange(walk.PickLists);
-
                 db.SaveChanges();
             }
 
